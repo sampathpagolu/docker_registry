@@ -1,0 +1,5 @@
+---
+        - name: get docker install script
+          command: curl -fsSL https://get.docker.com -o get-docker.sh
+        - name: install-docker
+          command: sh get-docker.sh

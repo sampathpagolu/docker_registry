@@ -1,0 +1,27 @@
+---
+- hosts: all
+  become: true
+  vars_files:
+    - vars/default.yaml
+  tasks:
+    - name: Check if docker is installed
+      command: dpkg-query -l docker
+      register: deb_check
+      changed_when: False
+      ignore_errors: True
+    - name: Execute script if docker is not installed
+      include: docker-install.yaml
+      when: deb_check.stderr.find('no packages found') != -1
+    - name: install docker-py
+      pip: 
+              name: docker
+    - name: pull docker registry image
+      docker_image: 
+        name: "{{ image_name }}"
+        state: present
+    - name: create docker registry container
+      docker_container:
+        name: "{{ container_name }}"
+        image: "{{ image_name }}"
+        state: present
+        ports: 5000:5000
