@@ -13,15 +13,15 @@
       include: docker-install.yaml
       when: deb_check.stderr.find('no packages found') != -1
     - name: install docker-py
-      pip: 
+      pip:
               name: docker
     - name: pull docker registry image
-      docker_image: 
+      docker_image:
         name: "{{ image_name }}"
         state: present
     - name: create docker registry container
       docker_container:
         name: "{{ container_name }}"
         image: "{{ image_name }}"
-        state: present
+        state: started
         ports: 5000:5000
